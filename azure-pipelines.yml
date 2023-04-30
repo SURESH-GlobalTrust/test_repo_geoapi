@@ -10,7 +10,7 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
-  imageName: '20210818/gt-Geo-API'
+  imageName: '20210818/gt-geo-api'
 
 stages:
 - stage: Prepare
