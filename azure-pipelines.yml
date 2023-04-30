@@ -10,8 +10,8 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
-  imageName: '20210818/gt-Geo-API'
-  containerRegistry : 'Azure-Docker Registry-Connection'
+  imageName: '20210818/20210818/gt-Geo-API'
+  dockerHubUsername: '20210818'
 
 stages:
 - stage: Prepare
@@ -85,7 +85,6 @@ stages:
       displayName: Push image
       inputs:
         command: push
-        containerRegistry: 'Azure-Docker Registry-Connection'
         repository: '$(imageName)'
         tags: |
            $(tag)
