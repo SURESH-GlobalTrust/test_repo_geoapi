@@ -4,7 +4,7 @@ FROM eclipse-temurin:17-jre-alpine
 WORKDIR /GeoAPI
 
 # Copy the war file from target folder
-COPY target/gtgeodata-0.0.1.war /GeoAPI/geodata.war
+COPY gtgeodata-0.0.1.war /GeoAPI/
 
 # port 8080 is available to the world outside this container
 EXPOSE 8080
