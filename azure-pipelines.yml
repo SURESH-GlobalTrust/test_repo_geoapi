@@ -37,17 +37,11 @@ stages:
         mavenAuthenticateFeed: false
         effectivePomSkip: false
         sonarQubeRunAnalysis: false
-    - task: CopyFiles@2
-      displayName: 'Copy WAR file to build context'
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Pipeline Artifact'
       inputs:
-        SourceFolder: '$(System.DefaultWorkingDirectory)/target'
-        Contents: '**/*.war'
-        TargetFolder: '$(Build.SourcesDirectory)/app'
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
+        targetPath: '$(System.DefaultWorkingDirectory)/target'
+        artifact: 'app'
 
 - stage: Build
   displayName: Build image
@@ -57,15 +51,20 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
+    - task: DownloadPipelineArtifact@2
+      displayName: 'Download Pipeline Artifact'
+      inputs:
+        artifact: 'app'
+        path: '$(Build.SourcesDirectory)/app'
     - task: Docker@2
       displayName: Build an image
       inputs:
         command: build
-        buildContext: '$(Build.SourcesDirectory)'
+        buildcontext: '$(Build.SourcesDirectory)'
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         tags: |
           $(tag)
-          
+
 - stage: Push
   displayName: Push image
   dependsOn: Build
@@ -84,8 +83,3 @@ stages:
       displayName: Push image
       inputs:
         command: push
-        repository: $(imageName)
-        tags: |
-          $(tag)
-
-
