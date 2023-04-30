@@ -11,7 +11,7 @@ resources:
 variables:
   tag: '$(Build.BuildId)'
   imageName: '20210818/gt-Geo-API'
-  dockerHubUsername : '20210818'
+  containerRegistry : 'Azure-Docker Registry-Connection'
 
 stages:
 - stage: Prepare
@@ -61,9 +61,9 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        repository: '$(dockerHubUsername)/$(imageName)'
+        repository: '$(imageName)'
         buildcontext: '$(Build.SourcesDirectory)'
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+        dockerfile: '$(Build.SourcesDirectory)/app/Dockerfile'
         tags: |
           $(tag)
 
@@ -85,7 +85,8 @@ stages:
       displayName: Push image
       inputs:
         command: push
-        repository: '$(dockerHubUsername)/$(imageName)'
+        containerRegistry: 'Azure-Docker Registry-Connection'
+        repository: '$(imageName)'
         tags: |
            $(tag)
 
