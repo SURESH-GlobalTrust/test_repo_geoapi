@@ -16,5 +16,5 @@ EXPOSE 8080
 LABEL maintainer="Suresh Andem <suresh.andem@globaltrustgrp.com>"
 
 # Run the application when the container launches
-ENTRYPOINT ["java", "-jar", "geodata.war"]
+ENTRYPOINT ["java", "-jar", "gtgeodata-0.0.1.war"]
 
