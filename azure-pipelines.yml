@@ -60,6 +60,7 @@ stages:
       displayName: Build an image
       inputs:
         command: build
+        repository: $(imageName)
         buildcontext: '$(Build.SourcesDirectory)'
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         tags: |
