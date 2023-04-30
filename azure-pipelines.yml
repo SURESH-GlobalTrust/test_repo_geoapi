@@ -40,7 +40,7 @@ stages:
     - task: CopyFiles@2
       displayName: 'Copy WAR file to build context'
       inputs:
-        SourceFolder: '$(System.DefaultWorkingDirectory)/target'
+        SourceFolder: '$(System.DefaultWorkingDirectory)'
         Contents: '**/*.war'
         TargetFolder: '$(build.artifactstagingdirectory)'
     - task: PublishBuildArtifacts@1
