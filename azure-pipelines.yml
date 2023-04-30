@@ -38,12 +38,11 @@ stages:
         effectivePomSkip: false
         sonarQubeRunAnalysis: false
     - task: CopyFiles@2
+      displayName: 'Copy WAR file to build context'
       inputs:
-        SourceFolder: '$(build.artifactstagingdirectory)'
-        Contents: |
-          **/*.war
-          **/*.jar
-        TargetFolder: '$(Build.SourcesDirectory)'
+        SourceFolder: '$(System.DefaultWorkingDirectory)/target'
+        Contents: '**/*.war'
+        TargetFolder: '$(build.artifactstagingdirectory)'
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
