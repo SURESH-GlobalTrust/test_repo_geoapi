@@ -63,7 +63,7 @@ stages:
         command: build
         repository: '$(imageName)'
         buildcontext: '$(Build.SourcesDirectory)'
-        dockerfile: '$(Build.SourcesDirectory)/app/Dockerfile'
+        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         tags: |
           $(tag)
 
