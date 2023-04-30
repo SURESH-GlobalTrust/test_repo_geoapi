@@ -65,6 +65,8 @@ stages:
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         tags: |
           $(tag)
+    - script: docker images
+      displayName: 'List Docker images'
 
 - stage: Push
   displayName: Push image
