@@ -83,3 +83,7 @@ stages:
       displayName: Push image
       inputs:
         command: push
+        repository: $(imageName)
+        tags: |
+           $(tag)
+
