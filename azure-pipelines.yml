@@ -40,9 +40,9 @@ stages:
     - task: CopyFiles@2
       displayName: 'Copy WAR file to build context'
       inputs:
-        SourceFolder: '$(System.DefaultWorkingDirectory)'
+        SourceFolder: '$(System.DefaultWorkingDirectory)/target'
         Contents: '**/*.war'
-        TargetFolder: '$(build.artifactstagingdirectory)'
+        TargetFolder: '$(Build.SourcesDirectory)/app'
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
@@ -61,6 +61,7 @@ stages:
       displayName: Build an image
       inputs:
         command: build
+        buildContext: '$(Build.SourcesDirectory)'
         dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
         tags: |
           $(tag)
