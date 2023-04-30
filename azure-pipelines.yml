@@ -39,11 +39,11 @@ stages:
         sonarQubeRunAnalysis: false
     - task: CopyFiles@2
       inputs:
-        SourceFolder: '$(System.DefaultWorkingDirectory)'
+        SourceFolder: '$(build.artifactstagingdirectory)'
         Contents: |
           **/*.war
           **/*.jar
-        TargetFolder: '$(build.artifactstagingdirectory)'
+        TargetFolder: '$(Build.SourcesDirectory)'
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
