@@ -83,13 +83,12 @@ stages:
     - task: UniversalPackages@0
       displayName: 'Install Universal Packages tools'
       inputs:
-        command: 'download'
+        command: 'download'# Publish a Universal Package
     - task: UniversalPackages@0
-      displayName: 'Publish WAR to Azure Artifacts'
+      displayName: Universal Publish
       inputs:
-        command: 'publish'
-        publishDirectory: '$(Build.SourcesDirectory)/app'
-        vstsFeedPublish: 'gt-test-feed'
-        vstsFeedPackagePublish: 'gt-Geo-API'
-        packagePublishDescription: 'My WAR package'
-        versionOption: 'patch'
+       command: publish
+       publishDirectory: '$(Build.ArtifactStagingDirectory)'
+       vstsFeedPublish: 'open-data-cube/gt-test-feed'
+       vstsFeedPackagePublish: 'gt-Geo-API'
+       packagePublishDescription: 'gt-Geo-API'
