@@ -43,27 +43,27 @@ stages:
         targetPath: '$(System.DefaultWorkingDirectory)/target'
         artifact: 'app'
 
-- stage: BuildAndPush
-  displayName: Build and Push image
-  condition: false()
+- stage: PublishArtifact
+  displayName: Publish Artifact to Azure Artifacts
+  dependsOn: Prepare
+  condition: succeeded()
   jobs:
-  - job: BuildAndPush
-    displayName: Build and Push
+  - job: Publish
+    displayName: Publish to gt-test-feed
     pool:
-      vmImage: ubuntu-latest
+      vmImage: 'ubuntu-latest'
     steps:
     - task: DownloadPipelineArtifact@2
       displayName: 'Download Pipeline Artifact'
       inputs:
         artifact: 'app'
-        path: '$(Build.SourcesDirectory)/app'
-    - task: Docker@2
-      displayName: Build and Push image
+        path: '$(System.DefaultWorkingDirectory)/downloaded_artifact'
+    - task: UniversalPackages@0
+      displayName: 'Publish Artifact to gt-test-feed'
       inputs:
-        command: buildAndPush
-        repository: '$(imageName)'
-        buildContext: '$(Build.SourcesDirectory)'
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        tags: |
-          $(tag)
-        containerRegistry: 'Azure-Docker Registry-Connection'
+        command: 'publish'
+        publishDirectory: '$(System.DefaultWorkingDirectory)/downloaded_artifact'
+        vstsFeed: 'gt-test-feed'
+        vstsFeedPublish: 'gt-test-feed'
+        vstsPackageVersion: '$(Build.BuildId)'
+        packagePublishDescription: 'Artifact from Build $(Build.BuildId)'
