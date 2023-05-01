@@ -138,4 +138,27 @@
 
 	</build>
 <packaging>war</packaging>
+	<repositories>
+		<repository>
+			<id>GT_Geo_API</id>
+			<url>https://pkgs.dev.azure.com/globaltrustgrp/Open-Data-Cube/_packaging/GT_Geo_API/maven/v1</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<distributionManagement>
+		<repository>
+			<id>GT_Geo_API</id>
+			<url>https://pkgs.dev.azure.com/globaltrustgrp/Open-Data-Cube/_packaging/GT_Geo_API/maven/v1</url>
+		</repository>
+		<snapshotRepository>
+			<id>GT_Geo_API</id>
+			<url>https://pkgs.dev.azure.com/globaltrustgrp/Open-Data-Cube/_packaging/GT_Geo_API/maven/v1</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>
