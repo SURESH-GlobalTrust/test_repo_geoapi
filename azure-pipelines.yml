@@ -39,16 +39,14 @@ stages:
         targetPath: '$(System.DefaultWorkingDirectory)/target'
         artifact: 'app'
     - task: UniversalPackages@0
-      displayName: 'Download and install Azure Artifacts Credential Provider'
       inputs:
-        command: 'download'
-        downloadDirectory: '$(System.DefaultWorkingDirectory)/credentialprovider'
-    - task: UniversalPackages@0
-      displayName: 'Publish Artifact to Azure Artifacts'
-      inputs:
-        command: 'publish'
-        publishDirectory: '$(System.DefaultWorkingDirectory)/target'
-        vstsFeedPublish: 'gt-geo-api'
-        vstsFeedPackagePublish: 'gt-geo-api'
-        versionOption: 'custom'
-        versionPublish: '$(Build.BuildId)'
+       command: 'publish'
+       publishDirectory: '$(Build.ArtifactStagingDirectory)'
+       feedsToUsePublish: 'internal'
+       vstsFeedPublish: '30b1d52d-57fc-4080-b11b-ccd6622fcccd'
+       vstsFeedPackagePublish: 'gt-geo-1'
+       versionOption: 'custom'
+       versionPublish: '$(Build.BuildId)'
+       packagePublishDescription: 'Publish Artifact to Azure Artifacts'
+       verbosity: 'Error'
+       publishedPackageVar: 'gt-geo-api'
