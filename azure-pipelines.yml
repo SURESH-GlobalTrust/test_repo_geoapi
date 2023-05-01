@@ -34,18 +34,12 @@ stages:
         effectivePomSkip: false
         sonarQubeRunAnalysis: false 
     - task: UniversalPackages@0
+      displayName: Universal Publish
       inputs:
-       command: 'download'
-       downloadDirectory: '$(System.DefaultWorkingDirectory)'
-       feedsToUse: 'internal'
-       vstsFeed: '30b1d52d-57fc-4080-b11b-ccd6622fcccd'
-       vstsFeedPackage: 'gt-geo'
-       vstsPackageVersion: '1.*'
-    - task: UniversalPackages@0
-      inputs:
-       command: 'publish'
-       publishDirectory: '$(Build.ArtifactStagingDirectory)'
-       feedsToUsePublish: 'internal'
-       vstsFeedPublish: '30b1d52d-57fc-4080-b11b-ccd6622fcccd'
-       vstsFeedPackagePublish: 'gt-geo'
-       versionOption: 'patch'
+        command: publish
+        publishDirectory: '$(Build.ArtifactStagingDirectory)'
+        vstsFeedPublish: 'Open-Data-Cube/gt-geo-api'
+        vstsFeedPackagePublish: 'gt-geo'
+        versionOption: custom
+        versionPublish: '1.*'
+        packagePublishDescription: 'gt-geo'
