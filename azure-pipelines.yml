@@ -59,9 +59,10 @@ stages:
         artifact: 'app'
         path: '$(System.DefaultWorkingDirectory)/downloaded_artifact'
     - task: UniversalPackages@0
-      displayName: 'Universal publish'
       inputs:
-       command: publish
-       vstsFeedPublish: 'fa93cec6-ad39-488f-acb5-dfda5db371a5/6dd9a91f-8753-4c20-90bf-85358bc1efd7'
-       vstsFeedPackagePublish: 'gt-geo-api'
-       packagePublishDescription: 'war-package'
+        command: 'publish'
+        publishDirectory: '$(Build.ArtifactStagingDirectory)'
+        feedsToUsePublish: 'internal'
+        vstsFeedPublish: 'fd7882c4-53b7-409b-a42c-259fdda2bdbc'
+        vstsFeedPackagePublish: 'gt-geo-api'
+        versionOption: 'patch'
