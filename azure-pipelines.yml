@@ -39,12 +39,8 @@ stages:
         targetPath: '$(System.DefaultWorkingDirectory)/target'
         artifact: 'app'
     - task: UniversalPackages@0
+      displayName: 'Universal publish'
       inputs:
-       command: 'publish'
-       publishDirectory: '$(System.DefaultWorkingDirectory)/target'
-       feedsToUsePublish: 'internal'
+       command: publish
        vstsFeedPublish: '30b1d52d-57fc-4080-b11b-ccd6622fcccd'
-       vstsFeedPackagePublish: 'gt-geo'
-       versionOption: 'patch'
-       verbosity: 'Error'
-       publishedPackageVar: 'gt-geo-api'
+       vstsFeedPackagePublish: mygeo
