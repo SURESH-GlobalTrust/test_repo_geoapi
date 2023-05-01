@@ -89,7 +89,7 @@ stages:
       inputs:
         command: 'publish'
         publishDirectory: '$(Build.SourcesDirectory)/app'
-        vstsFeedPublish: 'gt-Geo-API'
+        vstsFeedPublish: 'gt-test-feed'
         vstsFeedPackagePublish: 'gt-Geo-API'
         packagePublishDescription: 'My WAR package'
         versionOption: 'patch'
