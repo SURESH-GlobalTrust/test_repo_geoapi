@@ -32,15 +32,20 @@ stages:
         mavenVersionOption: 'Default'
         mavenAuthenticateFeed: false
         effectivePomSkip: false
-        sonarQubeRunAnalysis: false
-    - task: PublishPipelineArtifact@1
-      displayName: 'Publish Pipeline Artifact'
-      inputs:
-        targetPath: '$(System.DefaultWorkingDirectory)/target'
-        artifact: 'app'
+        sonarQubeRunAnalysis: false 
     - task: UniversalPackages@0
-      displayName: 'Universal publish'
       inputs:
-       command: publish
+       command: 'download'
+       downloadDirectory: '$(System.DefaultWorkingDirectory)'
+       feedsToUse: 'internal'
+       vstsFeed: '30b1d52d-57fc-4080-b11b-ccd6622fcccd'
+       vstsFeedPackage: 'gt-geo'
+       vstsPackageVersion: '1.*'
+    - task: UniversalPackages@0
+      inputs:
+       command: 'publish'
+       publishDirectory: '$(Build.ArtifactStagingDirectory)'
+       feedsToUsePublish: 'internal'
        vstsFeedPublish: '30b1d52d-57fc-4080-b11b-ccd6622fcccd'
-       vstsFeedPackagePublish: mygeo
+       vstsFeedPackagePublish: 'gt-geo'
+       versionOption: 'patch'
