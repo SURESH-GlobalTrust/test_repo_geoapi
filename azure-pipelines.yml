@@ -81,14 +81,19 @@ stages:
         artifact: 'app'
         path: '$(Build.SourcesDirectory)/app'
     - task: UniversalPackages@0
-      displayName: 'Install Universal Packages tools'
       inputs:
-        command: 'download'# Publish a Universal Package
+        command: 'download'
+        downloadDirectory: '$(System.DefaultWorkingDirectory)'
+        feedsToUse: 'internal'
+        vstsFeed: 'fa93cec6-ad39-488f-acb5-dfda5db371a5/6dd9a91f-8753-4c20-90bf-85358bc1efd7'
+        vstsFeedPackage: 'gt-Geo-API'
+        vstsPackageVersion: '1.*'
+        verbosity: 'Information'
     - task: UniversalPackages@0
-      displayName: Universal Publish
       inputs:
-       command: publish
-       publishDirectory: '$(Build.ArtifactStagingDirectory)'
-       vstsFeedPublish: 'open-data-cube/gt-test-feed'
-       vstsFeedPackagePublish: 'gt-Geo-API'
-       packagePublishDescription: 'gt-Geo-API'
+        command: 'publish'
+        publishDirectory: '$(Build.ArtifactStagingDirectory)'
+        feedsToUsePublish: 'internal'
+        vstsFeedPublish: 'fa93cec6-ad39-488f-acb5-dfda5db371a5/6dd9a91f-8753-4c20-90bf-85358bc1efd7'
+        vstsFeedPackagePublish: 'gt-Geo-API'
+        versionOption: 'patch'
