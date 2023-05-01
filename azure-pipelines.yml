@@ -33,13 +33,7 @@ stages:
         mavenAuthenticateFeed: false
         effectivePomSkip: false
         sonarQubeRunAnalysis: false 
-    - task: UniversalPackages@0
-      displayName: Universal Publish
+    - task: MavenAuthenticate@0
       inputs:
-        command: publish
-        publishDirectory: '$(Build.ArtifactStagingDirectory)'
-        vstsFeedPublish: 'Open-Data-Cube/gt-geo-api'
-        vstsFeedPackagePublish: 'gt-geo'
-        versionOption: custom
-        versionPublish: '1.*'
-        packagePublishDescription: 'gt-geo'
+       artifactsFeeds: 'GT_Geo_API'
+       mavenServiceConnections: 'maven-PAT'
