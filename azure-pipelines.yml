@@ -66,3 +66,30 @@ stages:
         tags: |
           $(tag)
         containerRegistry: 'Azure-Docker Registry-Connection'
+
+- stage: PublishWar
+  displayName: Publish WAR to Azure Artifacts
+  jobs:
+  - job: PublishWar
+    displayName: Publish WAR
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: DownloadPipelineArtifact@2
+      displayName: 'Download Pipeline Artifact'
+      inputs:
+        artifact: 'app'
+        path: '$(Build.SourcesDirectory)/app'
+    - task: UniversalPackages@0
+      displayName: 'Install Universal Packages tools'
+      inputs:
+        command: 'download'
+    - task: UniversalPackages@0
+      displayName: 'Publish WAR to Azure Artifacts'
+      inputs:
+        command: 'publish'
+        publishDirectory: '$(Build.SourcesDirectory)/app'
+        vstsFeedPublish: 'gt-Geo-API'
+        vstsFeedPackagePublish: 'gt-Geo-API'
+        packagePublishDescription: 'My WAR package'
+        versionOption: 'patch'
