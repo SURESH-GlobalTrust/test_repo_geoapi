@@ -1,7 +1,3 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
 trigger:
 - main
 
@@ -42,27 +38,17 @@ stages:
       inputs:
         targetPath: '$(System.DefaultWorkingDirectory)/target'
         artifact: 'app'
-
-- stage: PublishArtifact
-  displayName: Publish Artifact to Azure Artifacts
-  dependsOn: Prepare
-  condition: succeeded()
-  jobs:
-  - job: Publish
-    displayName: Publish to gt-test-feed
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    - task: DownloadPipelineArtifact@2
-      displayName: 'Download Pipeline Artifact'
-      inputs:
-        artifact: 'app'
-        path: '$(System.DefaultWorkingDirectory)/downloaded_artifact'
     - task: UniversalPackages@0
+      displayName: 'Download and install Azure Artifacts Credential Provider'
+      inputs:
+        command: 'download'
+        downloadDirectory: '$(System.DefaultWorkingDirectory)/credentialprovider'
+    - task: UniversalPackages@0
+      displayName: 'Publish Artifact to Azure Artifacts'
       inputs:
         command: 'publish'
-        publishDirectory: '$(Build.ArtifactStagingDirectory)'
-        feedsToUsePublish: 'internal'
-        vstsFeedPublish: 'fd7882c4-53b7-409b-a42c-259fdda2bdbc'
+        publishDirectory: '$(System.DefaultWorkingDirectory)/target'
+        vstsFeedPublish: 'gt-geo-api'
         vstsFeedPackagePublish: 'gt-geo-api'
-        versionOption: 'patch'
+        versionOption: 'custom'
+        versionPublish: '$(Build.BuildId)'
