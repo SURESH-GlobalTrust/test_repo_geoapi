@@ -59,11 +59,12 @@ stages:
         artifact: 'app'
         path: '$(System.DefaultWorkingDirectory)/downloaded_artifact'
     - task: UniversalPackages@0
+      displayName: 'Publish Artifact to gt-test-feed'
       inputs:
-        command: 'publish'
-        publishDirectory: '$(Build.ArtifactStagingDirectory)'
-        feedsToUsePublish: 'internal'
-        vstsFeedPublish: 'fa93cec6-ad39-488f-acb5-dfda5db371a5/6dd9a91f-8753-4c20-90bf-85358bc1efd7'
-        vstsFeedPackagePublish: 'gt-geo-123'
-        versionOption: 'patch'
-        verbosity: 'Information'
+       command: 'publish'
+       publishDirectory: '$(System.DefaultWorkingDirectory)/downloaded_artifact'
+       vstsFeed: 'Open-Data-Cube/gt-test-feed'
+       vstsFeedPublish: 'gt-test-feed'
+       vstsPackageVersion: '$(Build.BuildId)'
+       packagePublishDescription: 'Artifact from Build $(Build.BuildId)'
+           
