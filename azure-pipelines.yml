@@ -32,7 +32,13 @@ stages:
         mavenVersionOption: 'Default'
         mavenAuthenticateFeed: false
         effectivePomSkip: false
-        sonarQubeRunAnalysis: false 
+        sonarQubeRunAnalysis: false
+    - task: PublishPipelineArtifact@1
+      displayName: 'Publish Pipeline Artifact'
+      inputs:
+        targetPath: '$(System.DefaultWorkingDirectory)/target'
+        artifact: 'app'
+
     - task: MavenAuthenticate@0
       inputs:
        artifactsFeeds: 'GT_Geo_API'
