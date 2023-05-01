@@ -45,6 +45,7 @@ stages:
 
 - stage: BuildAndPush
   displayName: Build and Push image
+  condition: false()
   jobs:
   - job: BuildAndPush
     displayName: Build and Push
@@ -66,34 +67,3 @@ stages:
         tags: |
           $(tag)
         containerRegistry: 'Azure-Docker Registry-Connection'
-
-- stage: PublishWar
-  displayName: Publish WAR to Azure Artifacts
-  jobs:
-  - job: PublishWar
-    displayName: Publish WAR
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    - task: DownloadPipelineArtifact@2
-      displayName: 'Download Pipeline Artifact'
-      inputs:
-        artifact: 'app'
-        path: '$(Build.SourcesDirectory)/app'
-    - task: UniversalPackages@0
-      inputs:
-        command: 'download'
-        downloadDirectory: '$(System.DefaultWorkingDirectory)'
-        feedsToUse: 'internal'
-        vstsFeed: 'fa93cec6-ad39-488f-acb5-dfda5db371a5/6dd9a91f-8753-4c20-90bf-85358bc1efd7'
-        vstsFeedPackage: 'gt-Geo-API'
-        vstsPackageVersion: '1.*'
-        verbosity: 'Information'
-    - task: UniversalPackages@0
-      inputs:
-        command: 'publish'
-        publishDirectory: '$(Build.ArtifactStagingDirectory)'
-        feedsToUsePublish: 'internal'
-        vstsFeedPublish: 'fa93cec6-ad39-488f-acb5-dfda5db371a5/6dd9a91f-8753-4c20-90bf-85358bc1efd7'
-        vstsFeedPackagePublish: 'gt-Geo-API'
-        versionOption: 'patch'
