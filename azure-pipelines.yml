@@ -7,7 +7,6 @@ resources:
 variables:
   tag: '$(Build.BuildId)'
   imageName: '20210818/gt-Geo-API'
-  version: $[replace(replace(replace(utcNow(), '-', '.'), 'T', '.'), ':', '')]
 
 stages:
 - stage: Prepare
@@ -40,16 +39,12 @@ stages:
         targetPath: '$(System.DefaultWorkingDirectory)/target'
         artifact: 'app'
     - task: UniversalPackages@0
-      displayName: 'Publish Artifact to Azure Artifacts'
       inputs:
        command: 'publish'
        publishDirectory: '$(System.DefaultWorkingDirectory)/target'
        feedsToUsePublish: 'internal'
        vstsFeedPublish: '30b1d52d-57fc-4080-b11b-ccd6622fcccd'
-       vstsFeedPackagePublish: 'gt-geo-1'
-       versionOption: 'custom'
-       versionPublish: '$(version)'
-       packagePublishDescription: 'Publish Artifact to Azure Artifacts'
+       vstsFeedPackagePublish: 'gt-geo'
+       versionOption: 'patch'
        verbosity: 'Error'
        publishedPackageVar: 'gt-geo-api'
-       #$(Build.ArtifactStagingDirectory)
