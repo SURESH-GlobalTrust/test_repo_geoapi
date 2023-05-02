@@ -5,6 +5,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 variables:
+  group: MavenSettings
   MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
   MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
 
@@ -26,6 +27,12 @@ steps:
     versionSpec: '17'
     jdkArchitectureOption: 'x64'
     jdkSourceOption: 'PreInstalled'
+- task: FileTransform@1
+  displayName: 'Replace settings.xml variables'
+  inputs:
+    folderPath: '$(Build.SourcesDirectory)'
+    fileType: 'xml'
+    targetFiles: 'settings.xml'
     
 - task: Maven@4
   inputs:
