@@ -1,0 +1,7 @@
+<servers>
+  <server>
+    <id>GT_Geo_API</id>
+    <username>#{MAVEN_USERNAME}#</username>
+    <password>#{MAVEN_PASSWORD}#</password>
+  </server>
+</servers>
