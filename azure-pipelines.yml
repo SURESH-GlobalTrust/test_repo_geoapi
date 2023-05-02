@@ -3,69 +3,36 @@ trigger:
 
 pool:
   vmImage: 'ubuntu-latest'
-
-variables:
-  group: MavenSettings
-  MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
-  MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
-
 steps:
-- script: |
-    mkdir -p $(MAVEN_CACHE_FOLDER)
-  displayName: 'Create .m2/repository directory'
-- task: Cache@2
-  inputs:
-    key: 'maven | "$(Agent.OS)" | pom.xml'
-    restoreKeys: |
-       maven | "$(Agent.OS)"
-       maven
-    path: $(MAVEN_CACHE_FOLDER)
-  displayName: Cache Maven local repo 
-  
-- task: JavaToolInstaller@0
-  inputs:
-    versionSpec: '17'
-    jdkArchitectureOption: 'x64'
-    jdkSourceOption: 'PreInstalled'
-- task: FileTransform@1
-  displayName: 'Replace settings.xml variables'
-  inputs:
-    folderPath: '$(Build.SourcesDirectory)'
-    fileType: 'xml'
-    targetFiles: 'settings.xml'
-- task: MavenAuthenticate@0
-  inputs:
-    artifactsFeeds: 'GT_Geo_API'
-    mavenServiceConnections: 'Maven-PAT'
-- script: |
-    sudo apt-get update
-    sudo apt-get install -y maven
-  displayName: 'Install Maven'
 - task: Maven@4
   inputs:
     mavenPomFile: 'pom.xml'
-    goals: 'Package'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     codeCoverageToolOption: 'JaCoCo'
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.17'
     mavenVersionOption: 'Default'
-    mavenOptions: '-settings ./settings.xml'
-    mavenAuthenticateFeed: true
     effectivePomSkip: false
     sonarQubeRunAnalysis: false
-
+    
 - task: CopyFiles@2
-  displayName: 'Copy WAR file'
   inputs:
-    SourceFolder: '$(Build.SourcesDirectory)/target'
-    Contents: '**/*.war'
-    TargetFolder: '$(Build.ArtifactStagingDirectory)'
-
+    Contents: '**'
+    TargetFolder: '$(build.artifactstagingdirectory)'
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish WAR file to Azure Artifacts'
   inputs:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'war'
+    ArtifactName: 'war-file'
     publishLocation: 'Container'
+- task: Maven@3
+  inputs:
+    mavenPomFile: 'pom.xml'
+    mavenOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.17'
+    jdkArchitectureOption: 'x64'
+    mavenAuthenticateFeed: true
+    publishJUnitResults: false
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    goals: 'deploy'
