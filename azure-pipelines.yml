@@ -33,16 +33,21 @@ steps:
     folderPath: '$(Build.SourcesDirectory)'
     fileType: 'xml'
     targetFiles: 'settings.xml'
+- task: MavenAuthenticate@0
+  inputs:
+    artifactsFeeds: 'GT_Geo_API'
+    mavenServiceConnections: 'Maven-PAT'
 - task: Maven@4
   inputs:
     mavenPomFile: 'pom.xml'
-    goals: 'package'
+    goals: 'clean verify deploy'
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     codeCoverageToolOption: 'JaCoCo'
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.17'
     mavenVersionOption: 'Default'
+    mavenOptions: '-settings ./settings.xml'
     mavenAuthenticateFeed: true
     effectivePomSkip: false
     sonarQubeRunAnalysis: false
