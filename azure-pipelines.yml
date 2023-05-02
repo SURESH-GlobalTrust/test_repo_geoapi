@@ -37,6 +37,10 @@ steps:
   inputs:
     artifactsFeeds: 'GT_Geo_API'
     mavenServiceConnections: 'Maven-PAT'
+- script: |
+    sudo apt-get update
+    sudo apt-get install -y maven
+  displayName: 'Install Maven'
 - task: Maven@4
   inputs:
     mavenPomFile: 'pom.xml'
