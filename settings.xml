@@ -1,19 +1,6 @@
-<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
-                              http://maven.apache.org/xsd/settings-1.0.0.xsd">
-    <servers>
-        <server>
-            <id>GT_Geo_API</id>
-            <configuration>
-                <httpHeaders>
-                    <property>
-                        <name>Authorization</name>
-                        <value>Bearer $(System.AccessToken)</value>
-                    </property>
-                </httpHeaders>
-            </configuration>
-        </server>
-    </servers>
-</settings>
+<server>
+  <id>Open-Data-Cube</id>
+  <username>globaltrustgrp</username>
+  <password>evniygzjalxsx3qdfjdhlaquig6pq7sv5zdatqjzz44lofg43ijq</password>
+</server>
 
