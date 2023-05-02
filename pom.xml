@@ -120,6 +120,7 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
+						</executions>
 				</executions>
 			</plugin>
 		</plugins>
