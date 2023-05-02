@@ -120,18 +120,10 @@
 						<goals>
 							<goal>report</goal>
 						</goals>
-						</executions>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>
-		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-deploy-plugin</artifactId>
-			<version>3.0.0</version>
-			<configuration>
-				<skip>false</skip>
-			</configuration>
-		</plugin>
 		<finalName>gtgeodata-0.0.1</finalName>
 		<resources>
 			<resource>
@@ -146,27 +138,4 @@
 
 	</build>
 <packaging>war</packaging>
-	<repositories>
-		<repository>
-			<id>GT_Geo_API</id>
-			<url>https://pkgs.dev.azure.com/globaltrustgrp/Open-Data-Cube/_packaging/GT_Geo_API/maven/v1</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-
-	<distributionManagement>
-		<repository>
-			<id>GT_Geo_API</id>
-			<url>https://pkgs.dev.azure.com/globaltrustgrp/Open-Data-Cube/_packaging/GT_Geo_API/maven/v1</url>
-		</repository>
-		<snapshotRepository>
-			<id>GT_Geo_API</id>
-			<url>https://pkgs.dev.azure.com/globaltrustgrp/Open-Data-Cube/_packaging/GT_Geo_API/maven/v1</url>
-		</snapshotRepository>
-	</distributionManagement>
 </project>
