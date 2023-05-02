@@ -1,45 +1,51 @@
 trigger:
 - main
 
-resources:
-- repo: self
+pool:
+  vmImage: 'ubuntu-latest'
 
 variables:
-  tag: '$(Build.BuildId)'
-  imageName: '20210818/gt-Geo-API'
+  MAVEN_CACHE_FOLDER: $(Pipeline.Workspace)/.m2/repository
+  MAVEN_OPTS: '-Dmaven.repo.local=$(MAVEN_CACHE_FOLDER)'
 
-stages:
-- stage: Prepare
-  displayName: Prepare artifacts
-  jobs:
-  - job: BuildApp
-    displayName: Build Application
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    - task: JavaToolInstaller@0
-      inputs:
-        versionSpec: '17'
-        jdkArchitectureOption: 'x64'
-        jdkSourceOption: 'PreInstalled'
-    - task: Maven@4
-      inputs:
-        mavenPomFile: 'pom.xml'
-        publishJUnitResults: true
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        codeCoverageToolOption: 'JaCoCo'
-        javaHomeOption: 'JDKVersion'
-        mavenVersionOption: 'Default'
-        mavenAuthenticateFeed: false
-        effectivePomSkip: false
-        sonarQubeRunAnalysis: false
-    - task: PublishPipelineArtifact@1
-      displayName: 'Publish Pipeline Artifact'
-      inputs:
-        targetPath: '$(System.DefaultWorkingDirectory)/target'
-        artifact: 'app'
+steps:
+- task: Cache@2
+  inputs:
+    key: 'maven | "$(Agent.OS)" | pom.xml'
+    restoreKeys: |
+       maven | "$(Agent.OS)"
+       maven
+    path: $(MAVEN_CACHE_FOLDER)
+  displayName: Cache Maven local repo 
+  
+- task: JavaToolInstaller@0
+  inputs:
+    versionSpec: '17'
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: 'PreInstalled'
+    
+- task: Maven@4
+  inputs:
+    mavenPomFile: 'pom.xml'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    codeCoverageToolOption: 'JaCoCo'
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
 
-    - task: MavenAuthenticate@0
-      inputs:
-       artifactsFeeds: 'GT_Geo_API'
-       mavenServiceConnections: 'maven-PAT'
+- task: CopyFiles@2
+  displayName: 'Copy WAR file'
+  inputs:
+    SourceFolder: '$(Build.SourcesDirectory)/target'
+    Contents: '**/*.war'
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish WAR file to Azure Artifacts'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'war'
+    publishLocation: 'Container'
