@@ -8,7 +8,7 @@ COPY app/gtgeodata-0.0.1.war /GeoAPI/
 
 
 # port 8080 is available to the world outside this container
-EXPOSE 8080
+EXPOSE 8090
 
 # environment variable for Spring
 #ENV SPRING_PROFILES_ACTIVE=Dev
