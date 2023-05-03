@@ -5,9 +5,7 @@ resources:
 - repo: self
 
 variables:
-  tag: '$(Build.BuildId)'
-  imageName: '20210818/gt-Geo-API'
-
+- group: Maven-PAT
 stages:
 - stage: Prepare
   displayName: Prepare artifacts
@@ -42,7 +40,7 @@ stages:
         publishJUnitResults: true
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
         goals: 'install deploy'
-        options: '--batch-mode'
+        options: '--batch-mode --settings settings-azure.xml'
 
     - task: PublishPipelineArtifact@1
       displayName: 'Publish Pipeline Artifact'
