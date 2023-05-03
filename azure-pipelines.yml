@@ -41,10 +41,3 @@ stages:
         testResultsFiles: '**/surefire-reports/TEST-*.xml'
         goals: 'install deploy'
         options: '--batch-mode --settings settings-azure.xml'
-
-    - task: PublishPipelineArtifact@1
-      displayName: 'Publish Pipeline Artifact'
-      inputs:
-        targetPath: '$(System.DefaultWorkingDirectory)/target'
-        artifact: 'app'
-
