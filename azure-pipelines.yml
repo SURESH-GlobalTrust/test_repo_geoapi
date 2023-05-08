@@ -5,7 +5,8 @@ resources:
 - repo: self
 
 variables:
-- group: Maven-PAT
+  tag: '$(Build.BuildId)'
+
 stages:
 - stage: Prepare
   displayName: Prepare artifacts
@@ -28,16 +29,24 @@ stages:
         codeCoverageToolOption: 'JaCoCo'
         javaHomeOption: 'JDKVersion'
         mavenVersionOption: 'Default'
-        mavenAuthenticateFeed: false
+        mavenAuthenticateFeed: true
         effectivePomSkip: false
         sonarQubeRunAnalysis: false
-    - task: Maven@4
+    - task: CopyFiles@2
       inputs:
-        mavenPomFile: 'pom.xml'
-        javaHomeOption: 'JDKVersion'
-        jdkVersionOption: '1.17'
-        jdkArchitectureOption: 'x64'
-        publishJUnitResults: true
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        goals: 'install deploy'
-        options: '--batch-mode --settings settings-azure.xml'
+        Contents: '**/*.war'
+        TargetFolder: '$(Build.ArtifactStagingDirectory)'
+      displayName: 'Copy WAR files'
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'War-Files'
+        publishLocation: 'Container'
+      displayName: 'Publish WAR files'
+    - script: |
+        echo $(System.AccessToken) | az devops login --org https://dev.azure.com/globaltrustgrp/ --project Open-Data-Cube --auth-mode pat
+        az artifacts universal publish --organization https://dev.azure.com/globaltrustgrp/ --project Open-Data-Cube --scope project --feed GT_Geo_API --name my-war-artifact --version 1.0.0 --description "WAR file from Maven build" --path $(Build.ArtifactStagingDirectory)
+      displayName: 'Publish WAR file to Azure Artifacts'
+      env:
+        AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
