@@ -48,7 +48,7 @@ stages:
         set -e
         set -x
         echo $(System.AccessToken) | az devops login --org https://dev.azure.com/globaltrustgrp/
-        az artifacts universal publish --organization https://dev.azure.com/globaltrustgrp/ --project Open-Data-Cube --scope project --feed GT_Geo_API --name my-war-artifact --version 1.0.0 --description "WAR file from Maven build" --path $(Build.ArtifactStagingDirectory)
+        az artifacts universal publish --organization https://dev.azure.com/globaltrustgrp/ --project Open-Data-Cube --scope project --feed globaltrustgrp --name my-war-artifact --version 1.0.0 --description "WAR file from Maven build" --path $(Build.ArtifactStagingDirectory)
       displayName: 'Publish WAR file to Azure Artifacts'
       env:
         AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
