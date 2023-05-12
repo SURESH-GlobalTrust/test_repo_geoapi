@@ -1,5 +1,5 @@
 trigger:
-- Test
+- main
 
 resources:
 - repo: self
@@ -52,3 +52,29 @@ stages:
       displayName: 'Publish WAR file to Azure Artifacts'
       env:
         AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
+        
+- stage: BuildAndPush
+  displayName: Build and Push image
+  jobs:
+  - job: BuildAndPush
+    displayName: Build and Push
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - task: DownloadPipelineArtifact@2
+      displayName: 'Download Pipeline Artifact'
+      inputs:
+        artifact: 'app'
+        path: '$(Build.SourcesDirectory)/app'
+        
+    - task: Docker@2
+      displayName: Build and Push image
+      inputs:
+        command: buildAndPush
+        repository: '$(imageName)'
+        buildContext: '$(Build.SourcesDirectory)'
+        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+        tags: |
+          $(tag)
+          latest
+        containerRegistry: 'Azure-Docker Registry-Connection'
