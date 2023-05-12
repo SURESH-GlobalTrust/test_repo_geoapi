@@ -64,8 +64,8 @@ stages:
           - task: DownloadPipelineArtifact@2
             displayName: 'Download Pipeline Artifact'
             inputs:
-              artifact: 'app'
-              path: '$(Build.SourcesDirectory)/app'
+              artifact: 'War-Files'
+              path: '$(Build.SourcesDirectory)/War-Files'
           - task: Docker@2
             displayName: Build and Push image
             inputs:
