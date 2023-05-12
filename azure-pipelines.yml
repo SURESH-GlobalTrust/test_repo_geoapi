@@ -48,10 +48,10 @@ stages:
               set -e 
               set -x
               echo $(System.AccessToken) | az devops login --org https://dev.azure.com/globaltrustgrp/
-              az artifacts universal publish --organization https://dev.azure.com/globaltrustgrp/ --project Open-Data-Cube --scope project --feed GT-Geo-API --name Gt-Geo_API-artifact --version 1.0.$(Build.BuildId) --description "WAR file from Maven build" --path $(Build.ArtifactStagingDirectory)
+              az artifacts universal publish --organization https://dev.azure.com/globaltrustgrp/ --project Open-Data-Cube --scope project --feed GT-Geo-API --name gt-geo_api-artifact --version 1.0.148 --description 'WAR file from Maven build' --path /home/vsts/work/1/a
             displayName: 'Publish WAR file to Azure Artifacts'
             env:
-              AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
+             AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
 
   - stage: BuildAndPush
     displayName: Build and Push image
