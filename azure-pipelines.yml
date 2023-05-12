@@ -1,80 +1,79 @@
 trigger:
-- main
+  - main
 
 resources:
-- repo: self
+  - repo: self
 
 variables:
   tag: '$(Build.BuildId)'
+  imageName: '20210818/gt-Geo-API'
 
 stages:
-- stage: Prepare
-  displayName: Prepare artifacts
-  jobs:
-  - job: BuildApp
-    displayName: Build Application
-    pool:
-      vmImage: 'ubuntu-latest'
-    steps:
-    - task: JavaToolInstaller@0
-      inputs:
-        versionSpec: '17'
-        jdkArchitectureOption: 'x64'
-        jdkSourceOption: 'PreInstalled'
-    - task: Maven@4
-      inputs:
-        mavenPomFile: 'pom.xml'
-        publishJUnitResults: true
-        testResultsFiles: '**/surefire-reports/TEST-*.xml'
-        codeCoverageToolOption: 'JaCoCo'
-        javaHomeOption: 'JDKVersion'
-        mavenVersionOption: 'Default'
-        mavenAuthenticateFeed: true
-        effectivePomSkip: false
-        sonarQubeRunAnalysis: false
-    - task: CopyFiles@2
-      inputs:
-        Contents: '**/*.war'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'
-      displayName: 'Copy WAR files'
+  - stage: Prepare
+    displayName: Prepare artifacts
+    jobs:
+      - job: BuildApp
+        displayName: Build Application
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: JavaToolInstaller@0
+            inputs:
+              versionSpec: '17'
+              jdkArchitectureOption: 'x64'
+              jdkSourceOption: 'PreInstalled'
+          - task: Maven@4
+            inputs:
+              mavenPomFile: 'pom.xml'
+              publishJUnitResults: true
+              testResultsFiles: '**/surefire-reports/TEST-*.xml'
+              codeCoverageToolOption: 'JaCoCo'
+              javaHomeOption: 'JDKVersion'
+              mavenVersionOption: 'Default'
+              mavenAuthenticateFeed: true
+              effectivePomSkip: false
+              sonarQubeRunAnalysis: false
+          - task: CopyFiles@2
+            inputs:
+              Contents: '**/*.war'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)'
+            displayName: 'Copy WAR files'
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+              ArtifactName: 'War-Files'
+              publishLocation: 'Container'
+            displayName: 'Publish WAR files'
+          - script: |
+              set -e 
+              set -x
+              echo $(System.AccessToken) | az devops login --org https://dev.azure.com/globaltrustgrp/
+              az artifacts universal publish --organization https://dev.azure.com/globaltrustgrp/ --project Open-Data-Cube --scope project --feed GT-Geo-API --name Gt-Geo_API-artifact --version 1.0.$(Build.BuildId) --description "WAR file from Maven build" --path $(Build.ArtifactStagingDirectory)
+            displayName: 'Publish WAR file to Azure Artifacts'
+            env:
+              AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
 
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'War-Files'
-        publishLocation: 'Container'
-      displayName: 'Publish WAR files'
-    - script: |
-        set -e
-        set -x
-        echo $(System.AccessToken) | az devops login --org https://dev.azure.com/globaltrustgrp/
-        az artifacts universal publish --organization https://dev.azure.com/globaltrustgrp/ --project Open-Data-Cube --scope project --feed GT-Geo-API --name my-war-artifact --version 1.0.0 --description "WAR file from Maven build" --path $(Build.ArtifactStagingDirectory)
-      displayName: 'Publish WAR file to Azure Artifacts'
-      env:
-        AZURE_DEVOPS_CLI_PAT: $(System.AccessToken)
-        
-- stage: BuildAndPush
-  displayName: Build and Push image
-  jobs:
-  - job: BuildAndPush
-    displayName: Build and Push
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - task: DownloadPipelineArtifact@2
-      displayName: 'Download Pipeline Artifact'
-      inputs:
-        artifact: 'app'
-        path: '$(Build.SourcesDirectory)/app'
-        
-    - task: Docker@2
-      displayName: Build and Push image
-      inputs:
-        command: buildAndPush
-        repository: '$(imageName)'
-        buildContext: '$(Build.SourcesDirectory)'
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        tags: |
-          $(tag)
-          latest
-        containerRegistry: 'Azure-Docker Registry-Connection'
+  - stage: BuildAndPush
+    displayName: Build and Push image
+    jobs:
+      - job: BuildAndPush
+        displayName: Build and Push
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: DownloadPipelineArtifact@2
+            displayName: 'Download Pipeline Artifact'
+            inputs:
+              artifact: 'app'
+              path: '$(Build.SourcesDirectory)/app'
+          - task: Docker@2
+            displayName: Build and Push image
+            inputs:
+              command: buildAndPush
+              repository: '$(imageName)'
+              buildContext: '$(Build.SourcesDirectory)'
+              dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
+              tags: |
+                $(tag)
+                latest
+              containerRegistry: 'Azure-Docker Registry-Connection'
